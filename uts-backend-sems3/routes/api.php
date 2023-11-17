@@ -21,23 +21,29 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 // API for employees
-Route::get('/employees', [employeesController::class, 'index']); // get all employees
+Route::prefix('/employees')->group(function () {
+    Route::get('/', [employeesController::class, 'index']); // get all employees
 
-Route::post('/employees', [employeesController::class, 'store'])->middleware('auth:sanctum'); // create new employees
+    Route::post('/', [employeesController::class, 'store'])->middleware('auth:sanctum'); // create new employees
 
-Route::get('/employees/{id}', [employeesController::class, 'show']); // get employees by id
+    Route::get('/{id}', [employeesController::class, 'show']); // get employees by id
 
-Route::put('/employees/{id}', [employeesController::class, 'update'])->middleware('auth:sanctum'); // update employees by id
+    Route::put('/{id}', [employeesController::class, 'update'])->middleware('auth:sanctum'); // update employees by id
 
-Route::delete('/employees/{id}', [employeesController::class, 'destroy'])->middleware('auth:sanctum'); // delete employees by id
+    Route::delete('/{id}', [employeesController::class, 'destroy'])->middleware('auth:sanctum'); // delete employees by id
 
-Route::get('/employees/search/{name}', [employeesController::class, 'search']); // search employees by name
 
-Route::get('/employees/status/active', [employeesController::class, 'active']); // get all active employees
+    Route::get('/search/{name}', [employeesController::class, 'search']); // search employees by name
 
-Route::get('/employees/status/inactive', [employeesController::class, 'inactive']);  // get all inactive employees
+    // route for employees status (active, inactive, terminated)
+    Route::prefix('/status')->group(function () {
+        Route::get('/active', [employeesController::class, 'active']); // get all active employees
 
-Route::get('/employees/status/terminated', [employeesController::class, 'terminated']); // get all terminated employees
+        Route::get('/inactive', [employeesController::class, 'inactive']);  // get all inactive employees
+
+        Route::get('/terminated', [employeesController::class, 'terminated']); // get all terminated employees
+    });
+});
 
 // Auth API
 Route::post('/register', [AuthController::class, 'register'])->name('register'); // register new user
