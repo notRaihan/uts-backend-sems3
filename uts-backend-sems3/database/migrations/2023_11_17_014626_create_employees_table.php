@@ -15,7 +15,10 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->char('gender', 10);
+            $table->string('status', 20)->default('active');
             $table->date('hired_on', 20);
+
+
             $table->timestamps();
         });
     }
